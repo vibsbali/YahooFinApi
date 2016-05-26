@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 using System.Threading.Tasks;
 
@@ -14,10 +15,20 @@ namespace YahooFinApi.HttpServer
 
         public async Task<string> DownloadData(string query)
         {
-            var downloadTask = Task.Run(() => client.DownloadString(query));
-
-            await downloadTask;
-            return downloadTask.Result;
+            var downloadTask = Task.Run(() =>
+            {
+                try
+                {
+                   return client.DownloadString(new Uri(query));
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+            });
+            
+           await downloadTask;
+           return downloadTask.Result;
         }
     }
 }
