@@ -5,17 +5,32 @@ using System.Threading.Tasks;
 
 namespace YahooFinApi.HttpServer
 {
-    public class QuotesRetriever
+    public class QuotesRetriever : IQuotesRetriever
     {
         private readonly WebClient client;
+        private readonly string baseAddress;
+        
         public QuotesRetriever()
         {
             client = new WebClient();
         }
 
-        public async Task<string> DownloadData(string query)
+        public QuotesRetriever(string baseAddress)
         {
-            var downloadTask = Task.Run(() =>
+            this.baseAddress = baseAddress;
+            client = new WebClient();
+        }
+
+        public async Task<string> DownloadDataAsync(string query = "", string queryString = "")
+        {
+            //check if the baseAddress was passed, if so, add queryString to the end 
+            //otherwise pass query directly to DownloadQuotes method
+            if (!string.IsNullOrEmpty(baseAddress))
+            {
+                query = baseAddress + queryString;
+            }
+
+            var downloadQuotes = Task.Run(() =>
             {
                 try
                 {
@@ -27,8 +42,8 @@ namespace YahooFinApi.HttpServer
                 }
             });
             
-           await downloadTask;
-           return downloadTask.Result;
+           await downloadQuotes;
+           return downloadQuotes.Result;
         }
     }
 }

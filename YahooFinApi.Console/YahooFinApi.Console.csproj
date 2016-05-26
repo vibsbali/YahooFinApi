@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="stocks.json" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
