@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace YahooFinApi.HttpServer
 {
-    public class QuotesRetriever : IQuotesRetriever
+    public class QuotesRetriever : IQuotesRetriever, IDisposable
     {
-        private readonly WebClient client;
+        private WebClient client;
         private readonly string baseAddress;
-        
+
         public QuotesRetriever()
         {
             client = new WebClient();
@@ -34,16 +34,38 @@ namespace YahooFinApi.HttpServer
             {
                 try
                 {
-                   return client.DownloadString(new Uri(query));
+                    return client.DownloadString(new Uri(query));
                 }
                 catch (Exception ex)
                 {
                     return ex.Message;
                 }
             });
-            
-           await downloadQuotes;
-           return downloadQuotes.Result;
+
+            await downloadQuotes;
+            return downloadQuotes.Result;
         }
+
+        #region DisposeCode
+        // ReSharper disable once InconsistentNaming
+        protected bool disposed;
+        ~QuotesRetriever() { Dispose(false); }
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!disposed && disposing)
+            {
+                client = null;
+            }
+
+            disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }
