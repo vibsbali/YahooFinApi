@@ -2,6 +2,9 @@
 
 namespace YahooFinApi.Core
 {
+    /// <summary>
+    /// ADT for Stock Symbol and associated properties on ASX
+    /// </summary>
     public class Stock
     {
         public string Name { get; set; }
