@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-
 using System.Threading.Tasks;
 
 namespace YahooFinApi.HttpServer
@@ -43,6 +42,8 @@ namespace YahooFinApi.HttpServer
             });
 
             await downloadQuotes;
+
+            //This is where an exception can be thrown by the TPL
             return downloadQuotes.Result;
         }
 
